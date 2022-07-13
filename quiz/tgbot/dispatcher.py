@@ -42,7 +42,8 @@ def setup_dispatcher(dp):
 
     dp.add_handler(MessageHandler(Filters.text(
         onboarding_static_text.EXAM_TITLE), exam_handler.exam_start))
-
+    dp.add_handler(MessageHandler(Filters.text(
+        onboarding_static_text.LEADER), exam_handler.leader))
     # EXAM HANDLERS
     dp.add_handler(CallbackQueryHandler(
         exam_handler.exam_callback, pattern=r"exam-start-"))

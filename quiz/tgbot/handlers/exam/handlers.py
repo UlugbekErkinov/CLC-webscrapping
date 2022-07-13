@@ -31,6 +31,15 @@ def exam_start(update: Update, context: CallbackContext) -> None:
             text=static_text.exam_start, reply_markup=inline_keyboard)
 
 
+def leader(update: Update, context: CallbackContext) -> None:
+    user_exams = UserExam.objects.all().order_by("-score")
+    text = ""
+    for index,user_exam in enumerate (user_exams):
+        text +=f"{index+1}. {user_exam.user} -  {user_exam.exam.title} - {user_exam.score} \n"
+    update.message.reply_text(
+            text=text)
+
+
 def exam_callback(update: Update, context: CallbackContext) -> None:
     query = update.callback_query
     data = update.callback_query.data.split("-")
