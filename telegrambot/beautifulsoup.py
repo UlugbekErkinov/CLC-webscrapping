@@ -59,23 +59,45 @@ def today_command(update: Update, context: CallbackContext) -> None:
             'City not found.')
 
 
+# def url(update: Update, context: CallbackContext) -> None:
+#     """Echo the user message."""
+#     import requests
+#     from bs4 import BeautifulSoup
+#     URL = "https://kun.uz/news/2022/07/12/tolibon-delegatsiyasi-toshkentdagi-xalqaro-konferensiyada-ishtirok-etadi"
+#     page = requests.get(URL)
+
+#     soup = BeautifulSoup(page.content, "html.parser")
+#     # print(soup)
+#     # print(dir(soup))
+#     title = str(soup.find_all("div", class_="single-header__title")[0].text)
+#     # print(title.text)
+#     content = str(soup.find_all("div", class_="single-content")[0].text)
+#     # print(content.text)
+#     image = soup.find_all("div", class_="main-img")[0].find_all("img")[0]
+#     print(image)
+#     update.message.reply_photo(image['src'],f"{title}\n\n{content[:200]}")
+
+
 def url(update: Update, context: CallbackContext) -> None:
     """Echo the user message."""
     import requests
     from bs4 import BeautifulSoup
-    URL = "https://kun.uz/news/2022/07/12/tolibon-delegatsiyasi-toshkentdagi-xalqaro-konferensiyada-ishtirok-etadi"
+    URL = "https://kun.uz/news/category/jahon"
     page = requests.get(URL)
 
     soup = BeautifulSoup(page.content, "html.parser")
     # print(soup)
     # print(dir(soup))
-    title = str(soup.find_all("div", class_="single-header__title")[0].text)
-    # print(title.text)
-    content = str(soup.find_all("div", class_="single-content")[0].text)
-    # print(content.text)
-    image = soup.find_all("div", class_="main-img")[0].find_all("img")[0]
-    print(image)
-    update.message.reply_photo(image['src'],f"{title}\n\n{content[:200]}")
+    posts = soup.find_all("div", class_="news")
+    photos = []
+    titles = []
+    for post in posts[:9]:
+        photos.append(post.find("img")['src'])
+        titles.append(post.find("a",class_="news__title").text)
+        update.message.reply_photo(post.find("img")['src'],post.find("a",class_="news__title").text)
+    print(titles,photos)
+    # update.message.reply_photo(image['src'],f"{title}\n\n{content[:200]}")
+
 
 
 def main() -> None:
