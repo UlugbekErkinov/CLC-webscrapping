@@ -96,7 +96,8 @@ def url(update: Update, context: CallbackContext) -> None:
             if index ==1:
                 column_tables = column.find('table').find_all('tr',recursive=False)
                 text +=f"{column_tables[0].find('td',class_='hauptlink').text}({column_tables[1].text})"
-            
+            elif index==5:
+                text+=f"{column.a['href']}"
             else:
                 text+=f"{column.text}"
         text+="\n"
