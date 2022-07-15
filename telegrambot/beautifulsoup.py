@@ -82,22 +82,25 @@ def url(update: Update, context: CallbackContext) -> None:
     """Echo the user message."""
     import requests
     from bs4 import BeautifulSoup
-    URL = "https://kun.uz/news/category/jahon"
+    URL = "https://stadion.uz/"
     page = requests.get(URL)
 
     soup = BeautifulSoup(page.content, "html.parser")
     # print(soup)
     # print(dir(soup))
-    posts = soup.find_all("div", class_="news")
-    photos = []
-    titles = []
-    for post in posts[:9]:
-        photos.append(post.find("img")['src'])
-        titles.append(post.find("a",class_="news__title").text)
-        update.message.reply_photo(post.find("img")['src'],post.find("a",class_="news__title").text)
-    print(titles,photos)
-    # update.message.reply_photo(image['src'],f"{title}\n\n{content[:200]}")
-
+    players = soup.find("table", class_="items_most_player items_content_exp")
+    players_body = players.find("tbody")
+    text = ""
+    for player in players_body.find_all("tr",recursive=False)[:10]:
+        for index,column in enumerate(player.find_all("td",recursive=False)):
+            if index ==1:
+                column_tables = column.find('table').find_all('tr',recursive=False)
+                text +=f"{column_tables[0].find('td',class_='hauptlink').text}({column_tables[1].text})"
+            
+            else:
+                text+=f"{column.text}"
+        text+="\n"
+    update.message.reply_text(text)
 
 
 def main() -> None:
